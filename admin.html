@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Duong Binh | LOCKET GOLD</title>
+    <link rel="icon" type="image/png" href="https://i.pinimg.com/736x/a7/8e/54/a78e54332c395d49dd7f2f9ddd646d62.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1877f2;
+            --success: #42b72a;
+            --danger: #ff3333;
+            --dark: #1c1e21;
+            --light: #f0f2f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+
+        .admin-container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 15px;
+            border-radius: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .admin-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .admin-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title i {
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            width: 100%;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .status-active {
+            background: #e8f5e9;
+            color: var(--success);
+        }
+
+        .status-maintenance {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .reviews-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .review-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .review-name {
+            font-weight: 600;
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .review-content {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: none;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        /* Toggle Switch Styles */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 40px;
+            margin: 10px 0;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 40px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 32px;
+            width: 32px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Codes List Styles */
+        .codes-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .code-item {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .code-info {
+            flex: 1;
+        }
+
+        .code-value {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .code-link {
+            color: var(--text-secondary);
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 6px;
+        }
+
+        .code-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Tab Switch Button Styles */
+        .tab-switch-btn {
+            margin-left: auto;
+            min-width: 160px;
+            text-align: center;
+            font-size: 15px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: white;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 10px 16px;
+        }
+
+        .tab-switch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+            background: linear-gradient(135deg, #ff5722, #ff9800);
+            color: white;
+            text-decoration: none;
+        }
+
+        .tab-switch-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(255, 107, 53, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Admin Panel</h1>
+        </div>
+
+        <div class="admin-grid">
+            <div class="admin-card">
+                <h2 class="card-title">
+                    <i class="fas fa-tools"></i> Trạng thái website
+                </h2>
+                <div class="form-group">
+                    <label>Trạng thái hiện tại:</label>
+                    <div id="siteStatus" class="status-badge status-active">Đang hoạt động</div>
+                </div>
+                <div class="form-group">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="websiteToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <h2 class="card-title">
+                    <i class="fas fa-star"></i> Quản lý đánh giá
+                </h2>
+                <div class="reviews-list" id="reviewsList">
+                    <!-- Reviews will be loaded here -->
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <h2 class="card-title">
+                    <i class="fas fa-link"></i> Tạo mã và link
+                    <a href="admin2.html" class="tab-switch-btn">
+                        <i class="fas fa-exchange-alt"></i> Chuyển sang Admin Mới
+                    </a>
+                </h2>
+                <div class="form-group">
+                    <label>Mã code:</label>
+                    <input type="text" id="codeInput" class="form-control" placeholder="Nhập mã code">
+                </div>
+                <div class="form-group">
+                    <label>Link:</label>
+                    <input type="text" id="linkInput" class="form-control" placeholder="Nhập link">
+                </div>
+                <button class="btn btn-primary" id="saveCodeLink">
+                    <i class="fas fa-save"></i> Lưu mã và link
+                </button>
+            </div>
+
+            <div class="admin-card">
+                <h2 class="card-title">
+                    <i class="fas fa-list"></i> Danh sách mã và link
+                </h2>
+                <div id="codesList" class="codes-list">
+                    <!-- Codes will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Website state
+        let isMaintenance = false;
+        const API_URL = 'https://lkduongbinh.onrender.com/api';
+
+        // DOM Elements
+        const websiteToggle = document.getElementById('websiteToggle');
+        const siteStatus = document.getElementById('siteStatus');
+        const saveAccountBtn = document.getElementById('saveAccount');
+        const reviewsList = document.getElementById('reviewsList');
+
+        // Initialize
+        loadMaintenanceState();
+        loadReviews();
+        loadCodes();
+
+        // Load codes and links
+        async function loadCodes() {
+            try {
+                const response = await fetch(`${API_URL}/codelink`);
+                if (response.ok) {
+                    const codes = await response.json();
+                    displayCodes(codes);
+                } else {
+                    console.error('Error loading codes:', response.statusText);
+                    showToast('Không thể tải danh sách mã');
+                }
+            } catch (error) {
+                console.error('Error loading codes:', error);
+                showToast('Lỗi kết nối khi tải danh sách mã');
+            }
+        }
+
+        // Display codes in the list
+        function displayCodes(codes) {
+            const codesList = document.getElementById('codesList');
+            
+            if (codes.length === 0) {
+                codesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>Chưa có mã nào được tạo</p>
+                    </div>
+                `;
+                return;
+            }
+
+            codesList.innerHTML = codes.map(code => `
+                <div class="code-item" data-id="${code.id}">
+                    <div class="code-header">
+                        <div class="code-info">
+                            <div class="code-value">${code.code}</div>
+                            <div class="code-link">${code.link}</div>
+                        </div>
+                        <div class="code-actions">
+                            <button class="btn btn-danger btn-sm" onclick="deleteCode('${code.id}')">
+                                <i class="fas fa-trash"></i> Xóa
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-date">
+                        Tạo lúc: ${new Date(code.createdAt).toLocaleString('vi-VN')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Delete code
+        async function deleteCode(id) {
+            if (!confirm('Bạn có chắc chắn muốn xóa mã này?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/codelink/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showToast('Đã xóa mã thành công!');
+                    loadCodes(); // Reload the list
+                } else {
+                    const errorText = await response.text();
+                    console.error('Server error:', errorText);
+                    throw new Error(`Server error: ${errorText}`);
+                }
+            } catch (error) {
+                console.error('Error deleting code:', error);
+                showToast(`Lỗi: ${error.message || 'Không thể xóa mã'}`);
+            }
+        }
+
+        // Save code and link
+        document.getElementById('saveCodeLink').addEventListener('click', async function() {
+            const code = document.getElementById('codeInput').value;
+            const link = document.getElementById('linkInput').value;
+
+            if (!code || !link) {
+                showToast('Vui lòng điền đầy đủ mã và link!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/codelink`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code, link })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Server response:', data);
+                    showToast('Đã lưu mã và link thành công!');
+                    // Clear inputs after successful save
+                    document.getElementById('codeInput').value = '';
+                    document.getElementById('linkInput').value = '';
+                    // Reload the codes list
+                    loadCodes();
+                } else {
+                    const errorText = await response.text();
+                    console.error('Server error:', errorText);
+                    throw new Error(`Server error: ${errorText}`);
+                }
+            } catch (error) {
+                console.error('Error saving code and link:', error);
+                showToast(`Lỗi: ${error.message || 'Không thể kết nối đến server'}`);
+            }
+        });
+
+        // Initialize toggle state
+        websiteToggle.addEventListener('change', async function() {
+            try {
+                isMaintenance = !isMaintenance;
+                console.log('Sending request to:', `${API_URL}/maintenance`);
+                const response = await fetch(`${API_URL}/maintenance`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ isMaintenance })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Server response:', data);
+                    updateSiteStatus();
+                    showToast(isMaintenance ? 'Đã bật chế độ bảo trì!' : 'Đã tắt chế độ bảo trì!');
+                } else {
+                    const errorText = await response.text();
+                    console.error('Server error:', errorText);
+                    throw new Error(`Server error: ${errorText}`);
+                }
+            } catch (error) {
+                console.error('Detailed error:', error);
+                showToast(`Lỗi: ${error.message || 'Không thể kết nối đến server'}`);
+                isMaintenance = !isMaintenance; // Revert the state
+                websiteToggle.checked = !websiteToggle.checked; // Revert toggle
+            }
+        });
+
+        // Save account info
+        saveAccountBtn.addEventListener('click', function() {
+            const username = document.getElementById('accountUsername').value;
+            const password = document.getElementById('accountPassword').value;
+
+            if (username && password) {
+                // Save to localStorage for demo
+                localStorage.setItem('accountInfo', JSON.stringify({ username, password }));
+                showToast('Đã lưu thông tin tài khoản!');
+            } else {
+                showToast('Vui lòng điền đầy đủ thông tin!');
+            }
+        });
+
+        // Load reviews
+        function loadReviews() {
+            const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+            reviewsList.innerHTML = reviews.map(review => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-name">${review.name}</span>
+                        <div class="review-actions">
+                            <button class="btn btn-danger btn-sm" onclick="deleteReview('${review.name}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="review-content">${review.content}</div>
+                </div>
+            `).join('');
+        }
+
+        // Delete review
+        function deleteReview(name) {
+            const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+            const updatedReviews = reviews.filter(review => review.name !== name);
+            localStorage.setItem('reviews', JSON.stringify(updatedReviews));
+            loadReviews();
+            showToast('Đã xóa đánh giá!');
+        }
+
+        // Update site status
+        function updateSiteStatus() {
+            if (isMaintenance) {
+                siteStatus.textContent = 'Đang bảo trì';
+                siteStatus.className = 'status-badge status-maintenance';
+            } else {
+                siteStatus.textContent = 'Đang hoạt động';
+                siteStatus.className = 'status-badge status-active';
+            }
+        }
+
+        // Load initial maintenance state
+        async function loadMaintenanceState() {
+            try {
+                const response = await fetch(`${API_URL}/maintenance`);
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Loaded maintenance state:', data);
+                    isMaintenance = data.isMaintenance;
+                    websiteToggle.checked = !isMaintenance; // Set toggle state
+                    updateSiteStatus();
+                } else {
+                    const errorText = await response.text();
+                    console.error('Server error:', errorText);
+                    throw new Error(`Server error: ${errorText}`);
+                }
+            } catch (error) {
+                console.error('Error loading maintenance state:', error);
+                showToast('Không thể tải trạng thái bảo trì');
+            }
+        }
+
+        // Show toast message
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 

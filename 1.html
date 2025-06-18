@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>System Log Viewer</title>
+  <style>
+    body {
+      background-color: #0a0a0a;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      margin: 0;
+      padding: 10px;
+      overflow: hidden;
+    }
+    #terminal {
+      height: 100vh;
+      overflow-y: auto;
+      white-space: pre;
+      line-height: 1.3;
+    }
+    .log-entry {
+      margin-bottom: 5px;
+    }
+    .timestamp {
+      color: #0af;
+    }
+    .ip-address {
+      color: #f80;
+    }
+    .path {
+      color: #f0f;
+    }
+    .highlight {
+      color: #ff0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+
+  <script>
+    const terminal = document.getElementById('terminal');
+    
+    // Tạo 100 dòng log mô phỏng quá trình build và deploy
+    const components = [
+      "Checking out branch", "Installing dependencies", "Building project",
+      "Running tests", "Uploading artifacts", "Deploying to server", "Build successful",
+      "Fetching submodules", "Caching dependencies", "Compressing output", "Uploading source maps",
+      "Linting code", "Running postinstall script", "Starting production build",
+      "Optimizing bundle", "Generating static files", "Running security scan",
+      "Creating deployment package", "Validating configuration", "Starting build process",
+      "Downloading packages", "Resolving dependencies", "Compiling TypeScript",
+      "Bundling JavaScript", "Minifying CSS", "Processing images",
+      "Running unit tests", "Running integration tests", "Code coverage analysis",
+      "Performance testing", "Security audit", "Dependency vulnerability scan"
+    ];
+
+    const funnyLines = [
+      "🌕 Deploying to the moon... failed. Trying Earth... ✅ success!",
+      "🦖 Dino detected in build pipeline... ignoring.",
+      "🚀 Rocket launch sequence initiated... wait, wrong repo!",
+      "💡 Idea: deploy faster by thinking about it.",
+      "👾 Glitch in the matrix... never mind, it's just a typo.",
+      "🎭 Build process is like a drama... lots of suspense!",
+      "🍕 Pizza break... just kidding, back to work!",
+      "🎪 Welcome to the deployment circus!",
+      "🦄 Unicorn mode activated... magical deployment in progress",
+      "🎮 Level up! Build completed successfully!",
+      "🎨 Painting the deployment canvas... masterpiece in progress",
+      "🎵 Build symphony playing... all instruments in harmony",
+      "🏆 Achievement unlocked: Successful deployment!",
+      "🎪 Juggling dependencies... don't drop anything!",
+      "🎭 The build is a performance... and we're the stars!"
+    ];
+
+    const statuses = ["...done", "...success", "...skipped", "...warning", "...failed", "...ok", "...completed", "...finished", "...ready"];
+
+    // Tạo 100 dòng log với thời gian thực
+    const logs = [];
+    
+    for (let i = 0; i < 100; i++) {
+      if (Math.random() < 0.05) {
+        // Thêm dòng "troll" cho vui
+        logs.push(funnyLines[Math.floor(Math.random() * funnyLines.length)]);
+      } else {
+        const action = components[Math.floor(Math.random() * components.length)];
+        const status = statuses[Math.floor(Math.random() * statuses.length)];
+        logs.push(`${action} ${status}`);
+      }
+    }
+
+    const colors = {
+      timestamp: '#0af',
+      ip: '#f80',
+      path: '#f0f',
+      highlight: '#ff0'
+    };
+
+    function getCurrentTimestamp() {
+      const now = new Date();
+      // Chuyển đổi sang múi giờ Việt Nam (UTC+7)
+      const vietnamTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+      return vietnamTime.toISOString();
+    }
+
+    function colorizeText(text) {
+      // Thêm màu sắc cho các phần đặc biệt
+      text = text.replace(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g, 
+        `<span class="ip-address">$1</span>`);
+      text = text.replace(/(path: )('.*?')/g, 
+        `$1<span class="path">$2</span>`);
+      text = text.replace(/(https?:\/\/[^\s]+)/g, 
+        `<span class="highlight">$1</span>`);
+      // Thêm màu cho emoji
+      text = text.replace(/([🌕🦖🚀💡👾🎭🍕🎪🦄🎮🎨🎵🏆])/g, 
+        `<span style="color: #ff69b4;">$1</span>`);
+      // Thêm màu cho status
+      text = text.replace(/(\.\.\.(done|success|ok|completed|finished|ready))/g, 
+        `<span style="color: #0f0;">$1</span>`);
+      text = text.replace(/(\.\.\.(warning|skipped))/g, 
+        `<span style="color: #ffa500;">$1</span>`);
+      text = text.replace(/(\.\.\.failed)/g, 
+        `<span style="color: #f00;">$1</span>`);
+      return text;
+    }
+
+    function typeWriter(text, index, callback) {
+      if (index < text.length) {
+        const char = text.charAt(index);
+        const coloredChar = colorizeText(char);
+        terminal.innerHTML += coloredChar;
+        setTimeout(() => typeWriter(text, index + 1, callback), Math.random() * 10 + 10);
+      } else {
+        terminal.innerHTML += '\n';
+        if (callback) callback();
+      }
+    }
+
+    function displayLogs(logIndex) {
+      if (logIndex < logs.length) {
+        const currentTime = getCurrentTimestamp();
+        const timeStr = currentTime.replace('T', ' ').substring(0, 19);
+        const timestampSpan = `<span class="timestamp">[${timeStr}]</span> `;
+        
+        terminal.innerHTML += '<div class="log-entry">';
+        terminal.innerHTML += timestampSpan;
+        typeWriter(logs[logIndex], 0, () => {
+          terminal.innerHTML += '</div>';
+          // Cuộn xuống dưới cùng
+          terminal.scrollTop = terminal.scrollHeight;
+          // Thêm độ trễ ngẫu nhiên giữa các log
+          setTimeout(() => displayLogs(logIndex + 1), Math.random() * 500 + 100);
+        });
+      } else {
+        // Lặp lại từ đầu sau khi hiển thị tất cả logs
+        setTimeout(() => {
+          terminal.innerHTML = '';
+          displayLogs(0);
+        }, 3000);
+      }
+    }
+
+    // Bắt đầu hiển thị logs
+    displayLogs(0);
+
+    // Thêm hiệu ứng nhấp nháy con trỏ
+    setInterval(() => {
+      const cursor = document.getElementById('cursor');
+      if (cursor) {
+        cursor.style.visibility = cursor.style.visibility === 'hidden' ? 'visible' : 'hidden';
+      }
+    }, 500);
+  </script>
+</body>
+</html>

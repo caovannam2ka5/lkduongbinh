@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hoàng Nam | Kho Lưu Trữ</title>
+    <link rel="icon" type="image/png" href="https://i.pinimg.com/736x/18/6b/0e/186b0ef18116c2f917f99b6301bf002a.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1877f2;
+            --success: #42b72a;
+            --danger: #ff3333;
+            --dark: #1c1e21;
+            --light: #f0f2f5;
+            --warning: #ffa500;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+
+        .admin-container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 15px;
+            border-radius: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .admin-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .admin-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title i {
+            color: var(--primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), #166fe5);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .resource-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .resource-info {
+            flex: 1;
+        }
+
+        .resource-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .resource-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .resource-size {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .resource-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .copy-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .copy-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .copy-main {
+            background: var(--primary);
+            color: white;
+        }
+
+        .copy-admin {
+            background: var(--success);
+            color: white;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: none;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            z-index: 1000;
+            font-weight: 500;
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        .toast.show {
+            display: block;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translate(-50%, 100%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+
+        .access-log {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .log-item {
+            padding: 8px;
+            border-bottom: 1px solid #f1f3f4;
+            font-size: 14px;
+        }
+
+        .log-item:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .log-ip {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .log-user-agent {
+            color: #999;
+            font-size: 12px;
+        }
+
+        /* Tab Switch Button Styles */
+        .tab-switch-btn {
+            margin-left: auto;
+            min-width: 160px;
+            text-align: center;
+            font-size: 15px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: white;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 10px 16px;
+        }
+
+        .tab-switch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+            background: linear-gradient(135deg, #ff5722, #ff9800);
+            color: white;
+            text-decoration: none;
+        }
+
+        .tab-switch-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(255, 107, 53, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Kho Lưu Trữ Tài Nguyên</h1>
+
+        </div>
+
+        <div class="admin-grid">
+            <!-- Thống kê truy cập -->
+            <div class="admin-card">
+                <h2 class="card-title">
+                    <i class="fas fa-chart-line"></i> Thống kê truy cập
+                </h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalVisits">1,247</div>
+                        <div class="stat-label">Tổng lượt truy cập</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayVisits">89</div>
+                        <div class="stat-label">Hôm nay</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="uniqueVisitors">456</div>
+                        <div class="stat-label">Khách hàng</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="onlineUsers">12</div>
+                        <div class="stat-label">Đang online</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kho lưu trữ tài nguyên -->
+            <div class="admin-card">
+                <h2 class="card-title">
+                    <i class="fas fa-terminal"></i> Kho Chống Anti Ddos web 
+                </h2>
+                <div id="terminal-container" style="background-color: #0a0a0a; color: #0f0; font-family: 'Courier New', monospace; font-size: 14px; padding: 15px; border-radius: 8px; height: 300px; overflow-y: auto; white-space: pre; line-height: 1.3; border: 1px solid #333;">
+                    <div id="terminal"></div>
+                </div>
+            </div>
+
+            <!-- Nút sao chép link -->
+            <div class="admin-card">
+                <h2 class="card-title">
+                    <i class="fas fa-link"></i> Sao chép link
+                    <a href="admin.html" class="tab-switch-btn">
+                        <i class="fas fa-exchange-alt"></i> Chuyển sang Admin Cũ
+                    </a>
+                </h2>
+
+                <div class="copy-buttons">
+                    <button class="copy-btn copy-main" id="copyMainLink">
+                        <i class="fas fa-copy"></i>
+                        <span>Link App Xịn </span>
+                    </button>
+                    <button class="copy-btn copy-admin" id="copyAdminLink">
+                        <i class="fas fa-copy"></i>
+                        <span>Link App Thường </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lịch sử truy cập -->
+            <div class="admin-card">
+                <h2 class="card-title">
+                    <i class="fas fa-history"></i> Lịch sử truy cập gần đây
+                </h2>
+                <div class="access-log" id="accessLog">
+                    <div class="log-item">
+                        <div class="log-time">Đang tải...</div>
+                        <div class="log-ip">Loading...</div>
+                        <div class="log-user-agent">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const API_URL = 'https://lkduongbinh.onrender.com/api';
+
+        // Update statistics with random data (fallback)
+        function updateStats() {
+            const totalVisits = Math.floor(Math.random() * 2000) + 1000;
+            const todayVisits = Math.floor(Math.random() * 200) + 50;
+            const uniqueVisitors = Math.floor(Math.random() * 800) + 300;
+            const onlineUsers = Math.floor(Math.random() * 30) + 5;
+
+            document.getElementById('totalVisits').textContent = totalVisits.toLocaleString();
+            document.getElementById('todayVisits').textContent = todayVisits.toLocaleString();
+            document.getElementById('uniqueVisitors').textContent = uniqueVisitors.toLocaleString();
+            document.getElementById('onlineUsers').textContent = onlineUsers.toLocaleString();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            trackVisit(); // Track this visit
+            loadStatistics();
+            loadVisitHistory(); // Load real visit history
+            setupCopyButtons();
+        });
+
+        // Load statistics
+        async function loadStatistics() {
+            try {
+                // Load real statistics from API
+                const response = await fetch(`${API_URL}/statistics`);
+                if (response.ok) {
+                    const stats = await response.json();
+                    updateStatsWithRealData(stats);
+                } else {
+                    // Fallback to random data if API fails
+                    updateStats();
+                }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+                // Fallback to random data
+                updateStats();
+            }
+        }
+
+        // Update statistics with real data
+        function updateStatsWithRealData(stats) {
+            document.getElementById('totalVisits').textContent = stats.totalVisits.toLocaleString();
+            document.getElementById('todayVisits').textContent = stats.todayVisits.toLocaleString();
+            document.getElementById('uniqueVisitors').textContent = stats.uniqueVisitors.toLocaleString();
+            document.getElementById('onlineUsers').textContent = stats.onlineUsers.toLocaleString();
+        }
+
+        // Track page visit
+        async function trackVisit() {
+            try {
+                const visitData = {
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                    referrer: document.referrer || 'direct',
+                    path: window.location.pathname
+                };
+
+                await fetch(`${API_URL}/track-visit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(visitData)
+                });
+            } catch (error) {
+                console.error('Error tracking visit:', error);
+            }
+        }
+
+        // Load visit history
+        async function loadVisitHistory() {
+            try {
+                const response = await fetch(`${API_URL}/visit-history`);
+                if (response.ok) {
+                    const history = await response.json();
+                    displayVisitHistory(history);
+                } else {
+                    displayVisitHistory([]);
+                }
+            } catch (error) {
+                console.error('Error loading visit history:', error);
+                displayVisitHistory([]);
+            }
+        }
+
+        // Display visit history
+        function displayVisitHistory(history) {
+            const accessLog = document.getElementById('accessLog');
+            
+            if (history.length === 0) {
+                accessLog.innerHTML = `
+                    <div class="log-item">
+                        <div class="log-time">Chưa có lượt truy cập</div>
+                        <div class="log-ip">-</div>
+                        <div class="log-user-agent">-</div>
+                    </div>
+                `;
+                return;
+            }
+
+            accessLog.innerHTML = history.reverse().map(visit => {
+                const time = new Date(visit.timestamp).toLocaleString('vi-VN');
+                const userAgent = visit.userAgent ? visit.userAgent.split(' ')[0] : 'Unknown';
+                
+                return `
+                    <div class="log-item">
+                        <div class="log-time">${time}</div>
+                        <div class="log-ip">${visit.ip}</div>
+                        <div class="log-user-agent">${userAgent}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Setup copy buttons
+        function setupCopyButtons() {
+            const copyMainBtn = document.getElementById('copyMainLink');
+            const copyAdminBtn = document.getElementById('copyAdminLink');
+
+            copyMainBtn.addEventListener('click', () => handleCopy('https://www.dropbox.com/scl/fi/dva77jrb4ygmlnw8ztk5y/LOCKETDEVDUONGBINH.apk?rlkey=keffn8dvawhex80ji0g5t7cgi&st=zyfhyh4w&dl=1', 'Bản Vip'));
+            copyAdminBtn.addEventListener('click', () => handleCopy('https://www.dropbox.com/scl/fi/4xwwqmwnk8jibkucqyyk0/LocketGoldDuongBinhLite.apk?rlkey=nxz8sa4yotttflp70ctc3i2cd&st=azoy2a6f&dl=1', 'Bản Thường'));
+        }
+
+        // Handle copy functionality
+        async function handleCopy(text, label) {
+            try {
+                if (navigator.clipboard) {
+                    await navigator.clipboard.writeText(text);
+                    showToast(`✅ Đã sao chép ${label}!`, 'success');
+                } else {
+                    // Fallback for older browsers
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showToast(`✅ Đã sao chép ${label}!`, 'success');
+                }
+            } catch (error) {
+                console.error('Error copying:', error);
+                showToast(`❌ Lỗi sao chép ${label}`, 'error');
+            }
+        }
+
+        // Show toast message
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show ' + type;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Update statistics every 30 seconds
+        setInterval(() => {
+            loadStatistics();
+            loadVisitHistory();
+        }, 30000);
+
+        // Terminal Log Viewer
+        const terminal = document.getElementById('terminal');
+        
+        // Tạo 100 dòng log mô phỏng quá trình build và deploy
+        const components = [
+            "Checking out branch", "Installing dependencies", "Building project",
+            "Running tests", "Uploading artifacts", "Deploying to server", "Build successful",
+            "Fetching submodules", "Caching dependencies", "Compressing output", "Uploading source maps",
+            "Linting code", "Running postinstall script", "Starting production build",
+            "Optimizing bundle", "Generating static files", "Running security scan",
+            "Creating deployment package", "Validating configuration", "Starting build process",
+            "Downloading packages", "Resolving dependencies", "Compiling TypeScript",
+            "Bundling JavaScript", "Minifying CSS", "Processing images",
+            "Running unit tests", "Running integration tests", "Code coverage analysis",
+            "Performance testing", "Security audit", "Dependency vulnerability scan"
+        ];
+
+        const funnyLines = [
+            "🌕 Deploying to the moon... failed. Trying Earth... ✅ success!",
+            "🦖 Dino detected in build pipeline... ignoring.",
+            "🚀 Rocket launch sequence initiated... wait, wrong repo!",
+            "💡 Idea: deploy faster by thinking about it.",
+            "👾 Glitch in the matrix... never mind, it's just a typo.",
+            "🎭 Build process is like a drama... lots of suspense!",
+            "🍕 Pizza break... just kidding, back to work!",
+            "🎪 Welcome to the deployment circus!",
+            "🦄 Unicorn mode activated... magical deployment in progress",
+            "🎮 Level up! Build completed successfully!",
+            "🎨 Painting the deployment canvas... masterpiece in progress",
+            "🎵 Build symphony playing... all instruments in harmony",
+            "🏆 Achievement unlocked: Successful deployment!",
+            "🎪 Juggling dependencies... don't drop anything!",
+            "🎭 The build is a performance... and we're the stars!"
+        ];
+
+        const statuses = ["...done", "...success", "...skipped", "...warning", "...failed", "...ok", "...completed", "...finished", "...ready"];
+
+        // Tạo 100 dòng log với thời gian thực
+        const logs = [];
+        
+        for (let i = 0; i < 100; i++) {
+            if (Math.random() < 0.05) {
+                // Thêm dòng "troll" cho vui
+                logs.push(funnyLines[Math.floor(Math.random() * funnyLines.length)]);
+            } else {
+                const action = components[Math.floor(Math.random() * components.length)];
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                logs.push(`${action} ${status}`);
+            }
+        }
+
+        function getCurrentTimestamp() {
+            const now = new Date();
+            // Chuyển đổi sang múi giờ Việt Nam (UTC+7)
+            const vietnamTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+            return vietnamTime.toISOString();
+        }
+
+        function colorizeText(text) {
+            // Thêm màu sắc cho các phần đặc biệt
+            text = text.replace(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g, 
+                `<span style="color: #f80;">$1</span>`);
+            text = text.replace(/(path: )('.*?')/g, 
+                `$1<span style="color: #f0f;">$2</span>`);
+            text = text.replace(/(https?:\/\/[^\s]+)/g, 
+                `<span style="color: #ff0; font-weight: bold;">$1</span>`);
+            // Thêm màu cho emoji
+            text = text.replace(/([🌕🦖🚀💡👾🎭🍕🎪🦄🎮🎨🎵🏆])/g, 
+                `<span style="color: #ff69b4;">$1</span>`);
+            // Thêm màu cho status
+            text = text.replace(/(\.\.\.(done|success|ok|completed|finished|ready))/g, 
+                `<span style="color: #0f0;">$1</span>`);
+            text = text.replace(/(\.\.\.(warning|skipped))/g, 
+                `<span style="color: #ffa500;">$1</span>`);
+            text = text.replace(/(\.\.\.failed)/g, 
+                `<span style="color: #f00;">$1</span>`);
+            return text;
+        }
+
+        function typeWriter(text, index, callback) {
+            if (index < text.length) {
+                const char = text.charAt(index);
+                const coloredChar = colorizeText(char);
+                terminal.innerHTML += coloredChar;
+                setTimeout(() => typeWriter(text, index + 1, callback), Math.random() * 10 + 10);
+            } else {
+                terminal.innerHTML += '\n';
+                if (callback) callback();
+            }
+        }
+
+        function displayLogs(logIndex) {
+            if (logIndex < logs.length) {
+                const currentTime = getCurrentTimestamp();
+                const timeStr = currentTime.replace('T', ' ').substring(0, 19);
+                const timestampSpan = `<span style="color: #0af;">[${timeStr}]</span> `;
+                
+                terminal.innerHTML += '<div class="log-entry">';
+                terminal.innerHTML += timestampSpan;
+                typeWriter(logs[logIndex], 0, () => {
+                    terminal.innerHTML += '</div>';
+                    // Cuộn xuống dưới cùng
+                    const terminalContainer = document.getElementById('terminal-container');
+                    terminalContainer.scrollTop = terminalContainer.scrollHeight;
+                    // Thêm độ trễ ngẫu nhiên giữa các log
+                    setTimeout(() => displayLogs(logIndex + 1), Math.random() * 500 + 100);
+                });
+            } else {
+                // Lặp lại từ đầu sau khi hiển thị tất cả logs
+                setTimeout(() => {
+                    terminal.innerHTML = '';
+                    displayLogs(0);
+                }, 3000);
+            }
+        }
+
+        // Bắt đầu hiển thị logs khi trang load
+        document.addEventListener('DOMContentLoaded', function() {
+            displayLogs(0);
+        });
+    </script>
+</body>
+</html>
