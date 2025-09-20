@@ -805,7 +805,9 @@
             font-size: 18px;
         }
     </style>
+</head>
 
+<body>
     <div id="messengerWarning" class="messenger-warning">
         <p><i class="fas fa-exclamation-triangle"></i> Bắt Buộc Phải Mở Bằng Trình duyệt bên ngoài  </p>
     </div>
@@ -910,7 +912,6 @@
                 </div>
             </div>
             
-
 
             <div class="toggle-reviews">
                 <button id="toggleReviewsBtn" class="toggle-btn">
@@ -1154,12 +1155,8 @@
     </div>
 
     <script>
-        
         // Khởi tạo khi trang tải xong
         document.addEventListener('DOMContentLoaded', function() {
-            checkMaintenanceMode(); // Kiểm tra ngay khi trang tải
-            // Kiểm tra trạng thái bảo trì mỗi 30 giây
-            setInterval(checkMaintenanceMode, 30000);
             initBrowserNotification();
             checkMessenger();
             setupCodeVerification();
@@ -1191,231 +1188,123 @@
             setInterval(updateDate, 24 * 60 * 60 * 1000);
         }
         
-        // Kiểm tra chế độ bảo trì
-        async function checkMaintenanceMode() {
-            try {
-                const response = await fetch('https://lkduongbinh.onrender.com/api/maintenance');
-                if (response.ok) {
-                    const data = await response.json();
-                    const maintenanceDiv = document.getElementById('maintenanceMode');
-                    const mainContent = document.querySelector('.container');
-                    
-                    if (data.isMaintenance) {
-                        // Xóa toàn bộ nội dung trang
-                        document.body.innerHTML = '';
-                        
-                        // Thêm script bảo mật
-                        const securityScript = document.createElement('script');
-                        securityScript.textContent = `
-                            // Vô hiệu hóa DevTools
-                            (function() {
-                                function disableDevTools() {
-                                    // Vô hiệu hóa console
-                                    console.log = function() {};
-                                    console.warn = function() {};
-                                    console.error = function() {};
-                                    console.debug = function() {};
-                                    
-                                    // Vô hiệu hóa debugger
-                                    setInterval(function() {
-                                        debugger;
-                                    }, 100);
-                                    
-                                    // Vô hiệu hóa các API nguy hiểm
-                                    Object.defineProperty(window, 'localStorage', {
-                                        get: function() { return {}; }
-                                    });
-                                    Object.defineProperty(window, 'sessionStorage', {
-                                        get: function() { return {}; }
-                                    });
-                                    
-                                    // Vô hiệu hóa các phím tắt
-                                    document.addEventListener('keydown', function(e) {
-                                        if (
-                                            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) ||
-                                            (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) ||
-                                            (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c')) ||
-                                            (e.ctrlKey && (e.key === 'U' || e.key === 'u')) ||
-                                            (e.key === 'F12') ||
-                                            (e.ctrlKey && e.shiftKey && (e.key === 'R' || e.key === 'r'))
-                                        ) {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            return false;
-                                        }
-                                    }, true);
-                                    
-                                    // Vô hiệu hóa chuột phải
-                                    document.addEventListener('contextmenu', function(e) {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        return false;
-                                    }, true);
-                                    
-                                    // Vô hiệu hóa drag & drop
-                                    document.addEventListener('dragstart', function(e) {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        return false;
-                                    }, true);
-                                    
-                                    // Vô hiệu hóa copy
-                                    document.addEventListener('copy', function(e) {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        return false;
-                                    }, true);
-                                    
-                                    // Vô hiệu hóa select
-                                    document.addEventListener('selectstart', function(e) {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        return false;
-                                    }, true);
-                                    
-                                    // Vô hiệu hóa view source
-                                    document.addEventListener('keydown', function(e) {
-                                        if (e.ctrlKey && (e.key === 'S' || e.key === 's')) {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            return false;
-                                        }
-                                    }, true);
-                                }
-                                
-                                // Chạy bảo mật ngay lập tức
-                                disableDevTools();
-                                
-                                // Chạy lại mỗi 100ms để đảm bảo
-                                setInterval(disableDevTools, 100);
-                            })();
-                        `;
-                        document.head.appendChild(securityScript);
-                        
-                        // Thêm thông báo bảo trì
-                        document.body.innerHTML = `
-                            <div style="
-                                position: fixed;
-                                top: 0;
-                                left: 0;
-                                right: 0;
-                                bottom: 0;
-                                background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-                                color: white;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                text-align: center;
-                                padding: 20px;
-                                z-index: 999999;
-                                user-select: none;
-                                -webkit-user-select: none;
-                                -moz-user-select: none;
-                                -ms-user-select: none;
-                                font-family: 'Segoe UI', Arial, sans-serif;
-                            ">
-                                <div style="
-                                    max-width: 600px;
-                                    width: 100%;
-                                    padding: 40px;
-                                    background: rgba(255, 255, 255, 0.05);
-                                    border-radius: 20px;
-                                    backdrop-filter: blur(10px);
-                                    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-                                    border: 1px solid rgba(255, 255, 255, 0.1);
-                                    animation: fadeIn 0.5s ease-in-out;
-                                ">
-                                    <div style="
-                                        width: 100px;
-                                        height: 100px;
-                                        margin: 0 auto 30px;
-                                        background: #ffd700;
-                                        border-radius: 50%;
-                                        display: flex;
-                                        align-items: center;
-                                        justify-content: center;
-                                        font-size: 50px;
-                                        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-                                        animation: pulse 2s infinite;
-                                    ">
-                                        🛠️
-                                    </div>
-                                    <h1 style="
-                                        font-size: 36px;
-                                        margin-bottom: 20px;
-                                        line-height: 1.4;
-                                        background: linear-gradient(45deg, #ffd700, #ffa500);
-                                        -webkit-background-clip: text;
-                                        -webkit-text-fill-color: transparent;
-                                        font-weight: 700;
-                                    ">
-                                        Website đã đóng
-                                    </h1>
-                                    <p style="
-                                        font-size: 24px;
-                                        margin-bottom: 30px;
-                                        color: #ffd700;
-                                        font-weight: 600;
-                                    ">
-                                        Muốn Mở Lại WEB<br>
-                                        Hãy Liên Hệ Cho Binh Duong
-                                    </p>
-                                    <div style="
-                                        font-size: 16px;
-                                        color: #999;
-                                        margin-top: 30px;
-                                        padding: 20px;
-                                        background: rgba(0, 0, 0, 0.2);
-                                        border-radius: 10px;
-                                    ">
-                                        <p style="margin-bottom: 10px;">
-                                            <i class="fas fa-clock"></i>
-                                            Thời gian cập nhật: ${data.lastUpdated ? new Date(data.lastUpdated).toLocaleString('vi-VN') : 'Chưa cập nhật'}
-                                        </p>
-                                        <p style="
-                                            margin-top: 20px;
-                                            font-size: 14px;
-                                            color: #666;
-                                        ">
-                                            © 2025 DUONG BINH. All rights reserved.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <style>
-                                @keyframes fadeIn {
-                                    from { opacity: 0; transform: translateY(-20px); }
-                                    to { opacity: 1; transform: translateY(0); }
-                                }
-                                @keyframes pulse {
-                                    0% { transform: scale(1); }
-                                    50% { transform: scale(1.1); }
-                                    100% { transform: scale(1); }
-                                }
-                            </style>
-                        `;
-                        
-                        // Thêm meta tags bảo mật
-                        const metaTags = `
-                            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
-                            <meta http-equiv="X-Frame-Options" content="DENY">
-                            <meta http-equiv="X-Content-Type-Options" content="nosniff">
-                            <meta http-equiv="Referrer-Policy" content="no-referrer">
-                        `;
-                        document.head.innerHTML += metaTags;
-                        
-                        console.log('Trang web đang trong chế độ bảo trì');
-                    } else {
-                        maintenanceDiv.style.display = 'none';
-                        mainContent.style.display = 'block';
-                        console.log('Trang web đang hoạt động bình thường');
-                    }
-                }
-            } catch (error) {
-                console.error('Lỗi khi kiểm tra trạng thái bảo trì:', error);
+        // Hiển thị thông báo trình duyệt
+        function initBrowserNotification() {
+            const notification = document.getElementById('browserNotification');
+            const browser = detectBrowser();
+            
+            notification.innerHTML = `<i class="fas fa-globe"></i> Đang dùng ${browser}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Phát hiện trình duyệt
+        function detectBrowser() {
+            const ua = navigator.userAgent;
+            
+            if (/FBAN|FBAV/i.test(ua)) return 'Facebook Messenger';
+            if (/Instagram/i.test(ua)) return 'Instagram';
+            if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) return 'Safari';
+            if (/Chrome/i.test(ua)) return 'Chrome';
+            if (/Firefox/i.test(ua)) return 'Firefox';
+            if (/Edge/i.test(ua)) return 'Edge';
+            return 'Trình duyệt web';
+        }
+        
+        // Kiểm tra nếu là Messenger
+        function checkMessenger() {
+            if (/FBAN|FBAV/i.test(navigator.userAgent)) {
+                document.getElementById('messengerWarning').style.display = 'flex';
             }
         }
         
+        // Thiết lập phần nhập mã
+        function setupCodeVerification() {
+            const codeInput = document.getElementById('codeInput');
+            const verifyBtn = document.getElementById('verifyCodeBtn');
+            const codeResult = document.getElementById('codeResult');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Xử lý khi nhấn Enter trong input
+            codeInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verifyCode();
+                }
+            });
+
+            // Xử lý khi click nút xác nhận
+            verifyBtn.addEventListener('click', verifyCode);
+
+            // Hàm kiểm tra mã
+            function verifyCode() {
+                const code = codeInput.value.trim();
+                
+                if (!code) {
+                    showToast('Vui lòng nhập mã code!');
+                    codeInput.focus();
+                    return;
+                }
+
+                // Hiển thị trạng thái loading
+                verifyBtn.classList.add('loading');
+                verifyBtn.innerHTML = '<i class="fas fa-spinner"></i><span>Đang kiểm tra...</span>';
+                verifyBtn.disabled = true;
+
+                // Ẩn kết quả cũ
+                codeResult.style.display = 'none';
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+
+                // Kiểm tra mã cục bộ thay vì gọi API
+                setTimeout(() => {
+                    // Mã hợp lệ
+                    const validCodes = ["binhduong005", "lkduong005"];
+                    
+                    if (validCodes.includes(code.toLowerCase())) {
+                        // Mã hợp lệ
+                        showSuccessResult();
+                        showToast('✅ Mã hợp lệ! Đang chuyển hướng...');
+                        
+                        // Chuyển hướng sau 2 giây
+                        setTimeout(() => {
+                            window.open('https://www.dropbox.com/scl/fi/dva77jrb4ygmlnw8ztk5y/LOCKETDEVDUONGBINH.apk?rlkey=keffn8dvawhex80ji0g5t7cgi&st=zyfhyh4w&dl=1', '_blank');
+                        }, 2000);
+                    } else {
+                        // Mã không hợp lệ
+                        showErrorResult();
+                        showToast('❌ Mã không hợp lệ! Vui lòng thử lại.');
+                        codeInput.focus();
+                    }
+
+                    // Khôi phục trạng thái nút
+                    verifyBtn.classList.remove('loading');
+                    verifyBtn.innerHTML = '<i class="fas fa-check"></i><span>Xác nhận mã</span>';
+                    verifyBtn.disabled = false;
+                }, 1000);
+            }
+
+            function showSuccessResult() {
+                codeResult.style.display = 'block';
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+            }
+
+            function showErrorResult() {
+                codeResult.style.display = 'block';
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'block';
+            }
+        }
+        
+        // Thiết lập nút mở bằng Safari
+        function setupSafariButton() {
+            // Không cần thiết lập nút Safari nữa vì đã xóa
+        }
+
         // Thiết lập phần đánh giá
         function setupReviews() {
             const reviews = document.querySelectorAll('.review-card');
@@ -1598,137 +1487,6 @@
             });
         }
         
-        // Hiển thị thông báo trình duyệt
-        function initBrowserNotification() {
-            const notification = document.getElementById('browserNotification');
-            const browser = detectBrowser();
-            
-            notification.innerHTML = `<i class="fas fa-globe"></i> Đang dùng ${browser}`;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
-        }
-        
-        // Phát hiện trình duyệt
-        function detectBrowser() {
-            const ua = navigator.userAgent;
-            
-            if (/FBAN|FBAV/i.test(ua)) return 'Facebook Messenger';
-            if (/Instagram/i.test(ua)) return 'Instagram';
-            if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) return 'Safari';
-            if (/Chrome/i.test(ua)) return 'Chrome';
-            if (/Firefox/i.test(ua)) return 'Firefox';
-            if (/Edge/i.test(ua)) return 'Edge';
-            return 'Trình duyệt web';
-        }
-        
-        // Kiểm tra nếu là Messenger
-        function checkMessenger() {
-            if (/FBAN|FBAV/i.test(navigator.userAgent)) {
-                document.getElementById('messengerWarning').style.display = 'flex';
-            }
-        }
-        
-        // Thiết lập phần nhập mã
-        function setupCodeVerification() {
-            const codeInput = document.getElementById('codeInput');
-            const verifyBtn = document.getElementById('verifyCodeBtn');
-            const codeResult = document.getElementById('codeResult');
-            const successMessage = document.getElementById('successMessage');
-            const errorMessage = document.getElementById('errorMessage');
-
-            // Xử lý khi nhấn Enter trong input
-            codeInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    verifyCode();
-                }
-            });
-
-            // Xử lý khi click nút xác nhận
-            verifyBtn.addEventListener('click', verifyCode);
-
-            // Hàm kiểm tra mã
-            async function verifyCode() {
-                const code = codeInput.value.trim();
-                
-                if (!code) {
-                    showToast('Vui lòng nhập mã code!');
-                    codeInput.focus();
-                    return;
-                }
-
-                // Hiển thị trạng thái loading
-                verifyBtn.classList.add('loading');
-                verifyBtn.innerHTML = '<i class="fas fa-spinner"></i><span>Đang kiểm tra...</span>';
-                verifyBtn.disabled = true;
-
-                // Ẩn kết quả cũ
-                codeResult.style.display = 'none';
-                successMessage.style.display = 'none';
-                errorMessage.style.display = 'none';
-
-                try {
-                    // Gọi API để kiểm tra mã
-                    const response = await fetch('https://lkduongbinh.onrender.com/api/codelink');
-                    
-                    if (!response.ok) {
-                        throw new Error('Không thể kết nối đến server');
-                    }
-
-                    const codes = await response.json();
-                    
-                    // Tìm mã trong danh sách
-                    const foundCode = codes.find(entry => entry.code.toLowerCase() === code.toLowerCase());
-                    
-                    if (foundCode) {
-                        // Mã hợp lệ
-                        showSuccessResult();
-                        showToast('✅ Mã hợp lệ! Đang chuyển hướng...');
-                        
-                        // Chuyển hướng sau 2 giây
-                        setTimeout(() => {
-                            if (foundCode.link) {
-                                window.open(foundCode.link, '_blank');
-                            }
-                        }, 2000);
-                    } else {
-                        // Mã không hợp lệ
-                        showErrorResult();
-                        showToast('❌ Mã không hợp lệ! Vui lòng thử lại.');
-                        codeInput.focus();
-                    }
-                } catch (error) {
-                    console.error('Lỗi khi kiểm tra mã:', error);
-                    showErrorResult();
-                    showToast('❌ Lỗi kết nối! Vui lòng thử lại.');
-                } finally {
-                    // Khôi phục trạng thái nút
-                    verifyBtn.classList.remove('loading');
-                    verifyBtn.innerHTML = '<i class="fas fa-check"></i><span>Xác nhận mã</span>';
-                    verifyBtn.disabled = false;
-                }
-            }
-
-            function showSuccessResult() {
-                codeResult.style.display = 'block';
-                successMessage.style.display = 'block';
-                errorMessage.style.display = 'none';
-            }
-
-            function showErrorResult() {
-                codeResult.style.display = 'block';
-                successMessage.style.display = 'none';
-                errorMessage.style.display = 'block';
-            }
-        }
-        
-        // Thiết lập nút mở bằng Safari
-        function setupSafariButton() {
-            // Không cần thiết lập nút Safari nữa vì đã xóa
-        }
-
         // Thiết lập nút ẩn/hiện đánh giá
         function setupToggleReviews() {
             const toggleBtn = document.getElementById('toggleReviewsBtn');
