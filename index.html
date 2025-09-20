@@ -9,7 +9,7 @@
   <meta property="og:title" content="Binh Duong | LOCKET GOLD">
   <meta property="og:description" content="𝗟𝗼𝗰𝗸𝗲𝘁 𝗚𝗼𝗹𝗱 𝗗𝘂̀𝗻𝗴 𝗩𝗶̃𝗻𝗵 𝗩𝗶𝗲̂̃𝗻">
   <meta property="og:image" content="https://i.pinimg.com/736x/a7/8e/54/a78e54332c395d49dd7f2f9ddd646d62.jpg">
-  <meta property="og:url" content="https://lkduongbinh.netlify.app/">
+  <meta property="og:url" content="https://locketduytung.onrender.com">
   <meta property="og:type" content="website">
   
   <!-- Favicon -->
@@ -1148,19 +1148,12 @@
 
     <div id="toast" class="toast"></div>
 
-    <div id="maintenanceMode" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 9999; color: white; text-align: center; padding: 50px 20px;">
-        <h1 style="font-size: 32px; margin-bottom: 20px;">🛠️ Website đang bảo trì</h1>
-        <p style="font-size: 18px; margin-bottom: 30px;">Chúng tôi đang thực hiện một số cập nhật để cải thiện trải nghiệm của bạn.<br>Vui lòng quay lại sau!</p>
-        <div style="font-size: 14px; color: #999;">Thời gian dự kiến: 30 phút</div>
-    </div>
-
     <script>
         // Khởi tạo khi trang tải xong
         document.addEventListener('DOMContentLoaded', function() {
             initBrowserNotification();
             checkMessenger();
             setupCodeVerification();
-            setupSafariButton();
             setupReviews();
             setupToggleReviews();
             updateRealTimeDate(); // Cập nhật thời gian thực
@@ -1229,6 +1222,10 @@
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
 
+            // DANH SÁCH MÃ HỢP LỆ - THAY ĐỔI CÁC MÃ Ở ĐÂY
+            const validCodes = ["binhduong005", "lkduong005"];
+            const redirectUrl = "https://www.dropbox.com/scl/fi/dva77jrb4ygmlnw8ztk5y/LOCKETDEVDUONGBINH.apk?rlkey=keffn8dvawhex80ji0g5t7cgi&st=zyfhyh4w&dl=1";
+
             // Xử lý khi nhấn Enter trong input
             codeInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
@@ -1261,18 +1258,14 @@
 
                 // Kiểm tra mã cục bộ thay vì gọi API
                 setTimeout(() => {
-                    // Mã hợp lệ
-                    const validCodes = ["binhduong005", "lkduong005"];
-                    
+                    // Kiểm tra mã (không phân biệt hoa thường)
                     if (validCodes.includes(code.toLowerCase())) {
                         // Mã hợp lệ
                         showSuccessResult();
-                        showToast('✅ Mã hợp lệ! Đang chuyển hướng...');
+                        showToast('✅ Mã hợp lệ! Đang mở tab mới...');
                         
-                        // Chuyển hướng sau 2 giây
-                        setTimeout(() => {
-                            window.open('https://www.dropbox.com/scl/fi/dva77jrb4ygmlnw8ztk5y/LOCKETDEVDUONGBINH.apk?rlkey=keffn8dvawhex80ji0g5t7cgi&st=zyfhyh4w&dl=1', '_blank');
-                        }, 2000);
+                        // Mở tab mới ngay lập tức
+                        window.open(redirectUrl, '_blank');
                     } else {
                         // Mã không hợp lệ
                         showErrorResult();
@@ -1284,7 +1277,7 @@
                     verifyBtn.classList.remove('loading');
                     verifyBtn.innerHTML = '<i class="fas fa-check"></i><span>Xác nhận mã</span>';
                     verifyBtn.disabled = false;
-                }, 1000);
+                }, 500); // Giảm thời gian chờ xuống 0.5 giây
             }
 
             function showSuccessResult() {
@@ -1298,11 +1291,6 @@
                 successMessage.style.display = 'none';
                 errorMessage.style.display = 'block';
             }
-        }
-        
-        // Thiết lập nút mở bằng Safari
-        function setupSafariButton() {
-            // Không cần thiết lập nút Safari nữa vì đã xóa
         }
 
         // Thiết lập phần đánh giá
@@ -1516,5 +1504,3 @@
     </script>
 </body>
 </html>
-
-
