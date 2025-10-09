@@ -15,9 +15,8 @@
                 <key>ServerName</key>
                 <string>58c9fa.dns.nextdns.io</string>
             </dict>
-
             <key>PayloadDisplayName</key>
-            <string>LocketGold Junn</string>
+            <string>LocketGold DUONGBINH</string>
             <key>PayloadIdentifier</key>
             <string>com.profile.dns.001</string>
             <key>PayloadType</key>
@@ -30,12 +29,12 @@
     </array>
 
     <key>PayloadDisplayName</key>
-    <string>LocketGold Junn</string>
+    <string>LocketGold DUONGBINH</string>
     <key>PayloadDescription</key>
     <string>ADB Block (v1.0):
 - Chặn quảng cáo cho toàn bộ thiết bị...
 - Nâng cấp LocketGold
-Support: Junn | Config by: Junn</string>
+Support: DUONGBINH | Config by: DUONGBINH</string>
 
     <key>PayloadIdentifier</key>
     <string>com.profile.system.001</string>
